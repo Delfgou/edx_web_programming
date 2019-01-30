@@ -8,3 +8,9 @@ class User(db.Model): #or db.database_name ?
     username = db.Column(db.String, nullable = False)
     email = db.Column(db.String, nullable = False)
     password = db.Column(db.String, nullable = False)
+    
+    def register(self,username,email,password):
+        u = User(username = username, email = email, password = password)
+        db.session.add(u)
+        db.session.commit()
+        

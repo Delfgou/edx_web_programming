@@ -3,7 +3,7 @@ from flask import Flask, render_template, request
 #from flask_sqlalchemy import SQLAlchemy
 #from sqlalchemy import create_engine
 #from sqlalchemy.orm import scoped_session, sessionmaker
-from classes import *
+from models import *
 
 
 app = Flask(__name__)
@@ -17,6 +17,15 @@ db.init_app(app)
 def main():
     db.create_all()
     
+    #user1 = User(username = "xaver",email = "x@f.ch",password = "123")
+    #db.session.add(user1)
+    #db.session.commit()
+
+    
+    
+
+
+
 if __name__ == "__main__":
     with app.app_context():
         main()    
