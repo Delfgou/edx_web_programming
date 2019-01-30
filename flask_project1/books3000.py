@@ -3,9 +3,9 @@ from flask import Flask, render_template, request
 from models import *
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-db.init_app(app)
+#app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
+#app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+#db.init_app(app)
 
 @app.route("/")
 def index():
@@ -22,23 +22,11 @@ def register():
     db.session.commit()
     return render_template('success.html')
     
-    #passenger = Passenger(name=name, flight_id=flight_id)
-        #db.session.add(passenger)
-        #db.session.commit()
-        #return render_template("success.html")    
-#def main():
-    #db.create_all()
-    
-    #user1 = User(username = "xaver",email = "x@f.ch",password = "123")
-    #db.session.add(user1)
-    #db.session.commit()
-
-
-    
-    
+       
 
 
 
-#if __name__ == "__main__":
-    #with app.app_context():
-        #main()     
+
+if __name__ == "__main__":
+    with app.app_context():
+        main()     

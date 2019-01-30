@@ -31,19 +31,4 @@ if __name__ == "__main__":
         main()    
         
         
-#class User(db.d4j9oravts15j7):
-    #def __init__(self,username,email,password):
-        #self.username = username
-        #self.email = email
-        #self.password = password        
-        
-#user1 = User("cyrill","c@b.ch","abc123")
-#print(user1.username)
 
-
-
-#@app.route("/")
-#def index():
-    #return "Hello, world!"
-
-#print("ran")
