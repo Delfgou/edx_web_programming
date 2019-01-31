@@ -9,7 +9,28 @@
     <body>
         <h1> Results</h1>
         <ul>
-            {% for book in  results %}
+            {% for book in  results_isbn %}
+                <li>
+                    {{book.isbn}} {{book.title}} {{book.author}} {{book.year}}
+                </li> 
+            {% endfor %}
+        </ul>
+        <ul>
+            {% for book in  results_title %}
+                <li>
+                    {{book.isbn}} {{book.title}} {{book.author}} {{book.year}}
+                </li> 
+            {% endfor %}
+        </ul>
+        <ul>
+            {% for book in  results_author %}
+                <li>
+                    {{book.isbn}} {{book.title}} {{book.author}} {{book.year}}
+                </li> 
+            {% endfor %}
+        </ul>
+        <ul>
+            {% for book in  results_year %}
                 <li>
                     {{book.isbn}} {{book.title}} {{book.author}} {{book.year}}
                 </li> 

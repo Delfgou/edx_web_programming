@@ -13,5 +13,15 @@
                 Sign out
             </button>
         </form>
+        <h1> Search </h1>
+        <form action = "{{ url_for('search')}}" method = "post">
+            <input type = "text" name = "isbn" placeholder = "Enter isbn here">
+            <input type = "text" name = "title" placeholder = "Enter title here">
+            <input type = "text" name = "author" placeholder = "Enter author here">
+            <input type = "text" name = "year" placeholder = "Enter year here">
+            <button>
+                Search
+            </button>
+        </form>
     </body>
 </html>
