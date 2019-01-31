@@ -8,5 +8,10 @@
     
     <body>
         <h1> Welcome {{ message }}</h1>
+        <form action = "{{ url_for('sign_out')}}" method = "post">
+            <button>
+                Sign out
+            </button>
+        </form>
     </body>
 </html>

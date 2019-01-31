@@ -10,7 +10,7 @@ db.init_app(app)
 
 @app.route("/")
 def index():
-    return render_template('index.html')
+    return render_template('index.html', message="Welcome!")
 
 @app.route("/go_register", methods=["POST"])
 def go_to_register():
@@ -21,8 +21,7 @@ def register():
     username = request.form.get("username")   
     email = request.form.get("email")
     password = request.form.get("password")
-    if " " in username or " " in email or " " in password:
-        return render_template('error.html', message = "You're trying to hack us!")    
+        
     user = User(username = username, email = email, password = password)
     db.session.add(user)
     db.session.commit()
@@ -31,13 +30,18 @@ def register():
 @app.route("/sign_in", methods=["POST"])
 def sign_in():
     input_user = request.form.get("username")
-    input_password = request.form.get("password")    
+    input_password = request.form.get("password")  
+    if " " in input_user or " " in input_password:
+        return render_template('error.html', message = "You're trying to hack us!")    
     user = User.query.filter_by(username = input_user, password = input_password).first()
-    #password = User.query.filter_by(password = input_password).first()
     
     if user is None:
         return render_template("error.html", message="You are not registered")    
     return render_template('welcome.html', message = input_user)
+
+@app.route("/sign_out", methods=["POST"])
+def sign_out():
+    return render_template('index.html', message="You are logged out")
     
 
        
