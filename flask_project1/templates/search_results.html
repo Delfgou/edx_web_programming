@@ -11,32 +11,38 @@
         <ul>
             {% for book in  results_isbn %}
                 <li>
-                    {{book.isbn}} {{book.title}} {{book.author}} {{book.year}}
+                    {{book.isbn}} / {{book.title}} / {{book.author}} / {{book.year}}
                 </li> 
             {% endfor %}
         </ul>
         <ul>
             {% for book in  results_title %}
                 <li>
-                    {{book.isbn}} {{book.title}} {{book.author}} {{book.year}}
+                    {{book.isbn}} / {{book.title}} / {{book.author}} / {{book.year}}
                 </li> 
             {% endfor %}
         </ul>
         <ul>
             {% for book in  results_author %}
                 <li>
-                    {{book.isbn}} {{book.title}} {{book.author}} {{book.year}}
+                    {{book.isbn}} / {{book.title}} / {{book.author}} / {{book.year}}
                 </li> 
             {% endfor %}
         </ul>
         <ul>
             {% for book in  results_year %}
                 <li>
-                    {{book.isbn}} {{book.title}} {{book.author}} {{book.year}}
+                    {{book.isbn}} / {{book.title}} / {{book.author}} / {{book.year}}
                 </li> 
             {% endfor %}
         </ul>
-
+        <ul>
+            {% for book in  results %}
+                <li>
+                    {{book.isbn}} / {{book.title}} / {{book.author}} / {{book.year}}
+                </li> 
+            {% endfor %}
+        </ul>
     </body>
 </html>
 

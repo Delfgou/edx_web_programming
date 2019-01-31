@@ -58,32 +58,23 @@ def sign_out():
 
 @app.route("/search", methods=["POST"])
 def search():
-    #isbn = request.form.get("isbn")
-    #title = request.form.get("title")
-    #author = request.form.get("author")
-    #year = request.form.get("year")    
-    #if isbn is None:
-        #if title is None:
-            #if author is None:
-                #results = Book.query.filter_by(year = year).all()                                
-            #else: 
-                #results = Book.query.filter_by(author = author).all()                
-        #else:
-            #results = Book.query.filter_by(title = title).all()            
-    #else:
-        #results = Book.query.filter_by(isbn = isbn).all()
-    #return render_template('search_results.html', results = results)
     isbn = request.form.get("isbn")
     title = request.form.get("title")
     author = request.form.get("author")
     year = request.form.get("year")    
-    results_isbn = Book.query.filter_by(isbn = isbn).all()   
-    results_title = Book.query.filter_by(title = title).all()        
-    results_author = Book.query.filter_by(author = author).all()        
-    results_year = Book.query.filter_by(year = year).all()        
+    #results_isbn = Book.query.filter_by(isbn = isbn).all()   
+    #results_title = Book.query.filter_by(title = title).all()        
+    #results_author = Book.query.filter_by(author = author).all()        
+    #results_year = Book.query.filter_by(year = year).all()  
+    results_isbn = Book.query.filter(Book.isbn.ilike(f"%{isbn}%")).all()
+    results_title = Book.query.filter(Book.title.ilike(f"%{title}%")).all()
+    results_author = Book.query.filter(Book.author.ilike(f"%{author}%")).all()
+    results_year = Book.query.filter(Book.year.ilike(f"%{year}%")).all()
+    results = Book.query.filter(Book.isbn.ilike(f"%{isbn}%"),Book.title.ilike(f"%{title}%"),Book.author.ilike(f"%{author}%"),Book.year.ilike(f"%{year}%")).all()
     
                 
-    return render_template('search_results.html', results_isbn = results_isbn, results_title = results_title, results_author = results_author, results_year = results_year)    
+    #return render_template('search_results.html', results_isbn = results_isbn, results_title = results_title, results_author = results_author, results_year = results_year)    
+    return render_template('search_results.html', results = results)    
     
 
        
