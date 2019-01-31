@@ -32,10 +32,10 @@ def register():
 def sign_in():
     input_user = request.form.get("username")
     input_password = request.form.get("password")    
-    user = User.query.filter_by(username = input_user).first()
-    password = User.query.filter_by(password = input_password).first()
+    user = User.query.filter_by(username = input_user, password = input_password).first()
+    #password = User.query.filter_by(password = input_password).first()
     
-    if user is None or password is None:
+    if user is None:
         return render_template("error.html", message="You are not registered")    
     return render_template('welcome.html', message = input_user)
     
