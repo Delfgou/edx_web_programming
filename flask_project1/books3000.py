@@ -1,6 +1,8 @@
 import os
 from flask import Flask, render_template, request
 from models import *
+import smtplib
+import config
 
 app = Flask(__name__)
 #app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
@@ -20,10 +22,21 @@ def go_to_register():
 def register():
     username = request.form.get("username")   
     email = request.form.get("email")
-    password = request.form.get("password")
-        
+    password = request.form.get("password")        
     user = User(username = username, email = email, password = password)
     db.session.add(user)
+    #send email to user after registration
+    EMAIL_TO = email
+    server = smtplib.SMTP('smtp.gmail.com:587')
+    server.ehlo()
+    server.starttls()
+    server.login(config.EMAIL_FROM,config.PASSWORD)
+    subject = "Test. Welcome to books3000"
+    msg = "Hello {}. Thank you for your registration. This email has been sent automatically after your registration.".format(username)
+    message = 'Subject: {}\n\n{}'.format(subject,msg)
+    server.sendmail(config.EMAIL_FROM,EMAIL_TO, message)
+    server.quit()
+    print("Success: Email sent!")   
     db.session.commit()
     return render_template('success.html')
 
