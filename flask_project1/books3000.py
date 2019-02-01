@@ -3,6 +3,7 @@ from flask import Flask, render_template, request
 from models import *
 import smtplib
 import config
+from sqlalchemy import or_
 
 app = Flask(__name__)
 #app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
@@ -22,23 +23,32 @@ def go_to_register():
 def register():
     username = request.form.get("username")   
     email = request.form.get("email")
+    if "@" not in email:
+        return render_template("error.html", message = "Invalid email address")
     password = request.form.get("password")        
     user = User(username = username, email = email, password = password)
-    db.session.add(user)
-    #send email to user after registration
-    EMAIL_TO = email
-    server = smtplib.SMTP('smtp.gmail.com:587')
-    server.ehlo()
-    server.starttls()
-    server.login(config.EMAIL_FROM,config.PASSWORD)
-    subject = "Test. Welcome to books3000"
-    msg = "Hello {}. Thank you for your registration. This email has been sent automatically after your registration.".format(username)
-    message = 'Subject: {}\n\n{}'.format(subject,msg)
-    server.sendmail(config.EMAIL_FROM,EMAIL_TO, message)
-    server.quit()
-    print("Success: Email sent!")   
-    db.session.commit()
-    return render_template('success.html')
+    Check_db = User.query.filter(or_(User.username == username, User.email == email)).first()
+    if Check_db is None:        
+        #send email to user after registration
+        try:
+            db.session.add(user) 
+            EMAIL_TO = email
+            server = smtplib.SMTP('smtp.gmail.com:587')
+            server.ehlo()
+            server.starttls()
+            server.login(config.EMAIL_FROM,config.PASSWORD)
+            subject = "Test. Welcome to books3000"
+            msg = "Hello {}. Thank you for your registration. This email has been sent automatically after your registration.".format(username)
+            message = 'Subject: {}\n\n{}'.format(subject,msg)
+            server.sendmail(config.EMAIL_FROM,EMAIL_TO, message)
+            server.quit()
+            print("Success: Email sent!")   
+            db.session.commit()
+            return render_template('success.html')
+        except:
+            return render_template("error.html", message = "Invalid email address")
+    else:
+        return render_template('error.html', message = "Username or email has already been used")
 
 @app.route("/sign_in", methods=["POST"])
 def sign_in():
