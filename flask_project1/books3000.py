@@ -80,9 +80,9 @@ def search():
     return render_template('search_results.html', results = results)    
     
 
-@app.route("/<string:name>")
-def details(name):
-    return f"Hello, {name}!"
+@app.route("/details/<string:book>", methods =["post"])
+def details(book):
+    return f"Hello, {book}!"
 
 
 

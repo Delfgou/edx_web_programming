@@ -16,7 +16,11 @@
         <ul>
             {% for book in  results %}
                 <li>                    
-                    {{book.isbn}} / {{book.title}} / {{book.author}} / {{book.year}}
+                    <form action = "{{ url_for( "details", book = book.isbn )}}" method = "post">                        
+                        <button>
+                            {{book.isbn}} / {{book.title}} / {{book.author}} / {{book.year}}
+                        </button>
+                    </form>
                 </li> 
             {% endfor %}
         </ul>
