@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            book page
+        </title>
+    </head>
+    <style>
+      table, th, td {
+      border: 1px solid;
+      border-collapse: collapse;
+      padding: 5px;
+      }
+    </style>
+    
+    <body>
+      <table style="width:60%">
+        <tr>
+          <th>ISBN</th>
+          <th>TITLE</th>
+          <th>AUTHOR</th>
+          <th>YEAR</th>
+          <th>AVERAGE RATING</th>
+          <th>NUMBER OF RATINGS</th>
+        </tr>
+        <tr>
+          <td>{{ isbn }}</td>
+          <td>{{ title }}</td>
+          <td>{{ author }}</td>
+          <td>{{ year }}</td>
+          <td>{{ avg }}</td>
+          <td>{{ numb }}</td>
+        </tr>
+      </table> 
+    </body>
+</html>

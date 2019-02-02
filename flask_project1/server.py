@@ -4,6 +4,7 @@ from models import *
 import smtplib
 import config
 from sqlalchemy import or_
+import requests
 
 app = Flask(__name__)
 #app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
@@ -83,9 +84,14 @@ def search():
     return render_template('search_results.html', results = results)    
     
 
-@app.route("/<string:book>", methods =["post"])
-def details(book):
-    return f"Hello, {book}!"
+@app.route("/<string:isbn>/<string:title>/<string:author>/<string:year>", methods =["post"])
+def details(isbn,title,author,year):
+    key = "IhQrUp1cuWV8mu4SOw7QTQ"
+    isbn = isbn
+    res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": key, "isbns": isbn})
+    numb = res.json()['books'][0]['ratings_count']
+    avg = res.json()['books'][0]['average_rating']
+    return render_template('page_book.html', isbn=isbn, title=title, author=author,year=year,avg=avg, numb=numb)
 
 
 
