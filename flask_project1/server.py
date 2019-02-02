@@ -57,7 +57,6 @@ def sign_in():
     if " " in input_user or " " in input_password:
         return render_template('error.html', message = "You're trying to hack us!")    
     user = User.query.filter_by(username = input_user, password = input_password).first()
-    
     if user is None:
         return render_template("error.html", message="You are not registered")    
     return render_template('welcome.html', message = input_user)
