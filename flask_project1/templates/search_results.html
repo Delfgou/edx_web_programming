@@ -12,6 +12,11 @@
                 Sign out
             </button>
         </form>
+        <form action = "{{ url_for('go_to_search')}}" method = "post">
+            <button>
+                Search
+            </button>
+        </form>
         <h1> Results</h1>
         <ul>
             {% for book in  results %}
