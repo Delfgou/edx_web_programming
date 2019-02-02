@@ -1,16 +1,24 @@
 import os
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, session
 from models import *
 import smtplib
 import config
 from sqlalchemy import or_
 import requests
+from flask_session import Session
+
+
 
 app = Flask(__name__)
+app.secret_key = "any random string"
 #app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
 app.config["SQLALCHEMY_DATABASE_URI"] = "postgres://vhltvfuekxyisp:4e8e3284506f4903c26843cbeca2e8bc2ed4693c95ddd2dd8f104550c5700e27@ec2-79-125-6-250.eu-west-1.compute.amazonaws.com:5432/d4j9oravts15j7"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db.init_app(app)
+
+app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_TYPE"] = "filesystem"
+Session(app)
 
 @app.route("/")
 def index():
@@ -51,10 +59,11 @@ def register():
     else:
         return render_template('error.html', message = "Username or email has already been used")
 
-@app.route("/sign_in", methods=["POST"])
+@app.route("/sign_in", methods=["GET", "POST"])
 def sign_in():
     input_user = request.form.get("username")
     input_password = request.form.get("password")  
+    session['username'] = request.form['username']
     if " " in input_user or " " in input_password:
         return render_template('error.html', message = "You're trying to hack us!")    
     user = User.query.filter_by(username = input_user, password = input_password).first()
@@ -81,18 +90,32 @@ def search():
     results_author = Book.query.filter(Book.author.ilike(f"%{author}%")).all()
     results_year = Book.query.filter(Book.year.ilike(f"%{year}%")).all()
     results = Book.query.filter(Book.isbn.ilike(f"%{isbn}%"),Book.title.ilike(f"%{title}%"),Book.author.ilike(f"%{author}%"),Book.year.ilike(f"%{year}%")).all()
+    if results== []:
+        return render_template('error.html', message = "No results")
     return render_template('search_results.html', results = results)    
     
 
 @app.route("/<string:isbn>/<string:title>/<string:author>/<string:year>", methods =["post"])
 def details(isbn,title,author,year):
     key = "IhQrUp1cuWV8mu4SOw7QTQ"
-    isbn = isbn
     res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": key, "isbns": isbn})
     numb = res.json()['books'][0]['ratings_count']
     avg = res.json()['books'][0]['average_rating']
     return render_template('page_book.html', isbn=isbn, title=title, author=author,year=year,avg=avg, numb=numb)
 
+
+@app.route("/rating/<string:isbn>", methods =["post"])
+def rating(isbn):
+    rating = request.form.get("rating") 
+    comment = request.form.get("comment") 
+    try: 
+        review = Review(isbn = isbn, rating = rating, comment = comment)
+        db.session.add(review)
+        db.session.commit()        
+        return render_template('success.html')
+    except:
+        return render_template('error.html', message = "Rating must be a number!")
+    
 
 
 if __name__ == "__main__":
