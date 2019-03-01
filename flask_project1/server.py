@@ -25,20 +25,27 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-@app.route('/email',methods=['GET','POST'])
-def email():
-    if request.method == 'GET':
-        return '<form action="/email" method = "POST"><input name="email"><input type="submit">'
-    email = request.form['email']
-    token = s.dumps(email, salt = 'email-confirm')
+@app.route('/register',methods=['GET','POST'])
+def register():
     
-    msg = Message('Confirm Email', sender='c.delfg@gmail.com', recipients=[email])
-    
-    link = url_for('confirm_email', token = token, _external=True)
-    msg.body =  'Your link {}'.format(link)
-    mail.send(msg)
-    
-    return 'The email you entered is {}. The token is {}'.format(email,token)
+    username = request.form.get("username")   
+    email = request.form.get("email")   
+    password = request.form.get("password")
+    user = User(username = username, email = email, password = password,confirmed=False)
+    Check_db = User.query.filter(or_(User.username == username, User.email == email)).first()
+    if Check_db is None:
+        #if request.method == 'GET':
+            #return '<form action="/email" method = "POST"><input name="email"><input type="submit">'
+        #email = request.form['email']
+        token = s.dumps(email, salt = 'email-confirm')
+        
+        msg = Message('Confirm Email', sender='c.delfg@gmail.com', recipients=[email])
+        
+        link = url_for('confirm_email', token = token, _external=True)
+        msg.body =  'Your link {}'.format(link)
+        mail.send(msg)
+        
+    return 'An email with a confirmation link has been sent to your email address'
 
 @app.route('/confirm_email/<token>')
 def confirm_email(token):
@@ -48,6 +55,38 @@ def confirm_email(token):
         return '<h1>The token is expired</h1>'
     return 'The token works!'
 
+
+@app.route("/register", methods=["POST"])
+#def register():
+    #username = request.form.get("username")   
+    #email = request.form.get("email")
+    #if "@" not in email:
+        #return render_template("error.html", message = "Invalid email address")
+    #password = request.form.get("password")        
+    #user = User(username = username, email = email, password = password,confirmed=False)
+    #Check_db = User.query.filter(or_(User.username == username, User.email == email)).first()
+    #if Check_db is None:        
+        ##send email to user after registration
+        #try:
+            #db.session.add(user) 
+            #EMAIL_TO = email
+            #server = smtplib.SMTP('smtp.gmail.com:587')
+            #server.ehlo()
+            #server.starttls()
+            #server.login(config.EMAIL_FROM,config.PASSWORD)
+            #subject = "Test. Welcome to books3000"
+            #msg = "Hello {}. Thank you for your registration. This email has been sent automatically after your registration.".format(username)
+            #message = 'Subject: {}\n\n{}'.format(subject,msg)
+            #server.sendmail(config.EMAIL_FROM,EMAIL_TO, message)
+            #server.quit()
+            #print("Success: Email sent!")   
+            #db.session.commit()
+            #return render_template('success.html')
+        #except:
+            #return render_template("error.html", message = "Invalid email address")
+    #else:
+        #return render_template('error.html', message = "Username or email has already been used")
+
 @app.route("/")
 def index():
     return render_template('index.html', message="Welcome!")
@@ -56,36 +95,6 @@ def index():
 def go_to_register():
     return render_template('register.html')
 
-@app.route("/register", methods=["POST"])
-def register():
-    username = request.form.get("username")   
-    email = request.form.get("email")
-    if "@" not in email:
-        return render_template("error.html", message = "Invalid email address")
-    password = request.form.get("password")        
-    user = User(username = username, email = email, password = password,confirmed=False)
-    Check_db = User.query.filter(or_(User.username == username, User.email == email)).first()
-    if Check_db is None:        
-        #send email to user after registration
-        try:
-            db.session.add(user) 
-            EMAIL_TO = email
-            server = smtplib.SMTP('smtp.gmail.com:587')
-            server.ehlo()
-            server.starttls()
-            server.login(config.EMAIL_FROM,config.PASSWORD)
-            subject = "Test. Welcome to books3000"
-            msg = "Hello {}. Thank you for your registration. This email has been sent automatically after your registration.".format(username)
-            message = 'Subject: {}\n\n{}'.format(subject,msg)
-            server.sendmail(config.EMAIL_FROM,EMAIL_TO, message)
-            server.quit()
-            print("Success: Email sent!")   
-            db.session.commit()
-            return render_template('success.html')
-        except:
-            return render_template("error.html", message = "Invalid email address")
-    else:
-        return render_template('error.html', message = "Username or email has already been used")
 
 @app.route("/sign_in", methods=["GET", "POST"])
 def sign_in():
