@@ -1,15 +1,20 @@
 import os
-from flask import Flask, render_template, request, session
+from flask import Flask, render_template, request, session, url_for
 from models import *
 import smtplib
 import config
 from sqlalchemy import or_
 import requests
 from flask_session import Session
+from flask_mail import Mail,Message
+from itsdangerous import URLSafeTimedSerializer, SignatureExpired
 
 
 
 app = Flask(__name__)
+app.config.from_pyfile('config.py')
+mail = Mail(app)
+s = URLSafeTimedSerializer('Thisisasecret!')
 app.secret_key = "any random string"
 #app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
 app.config["SQLALCHEMY_DATABASE_URI"] = "postgres://vhltvfuekxyisp:4e8e3284506f4903c26843cbeca2e8bc2ed4693c95ddd2dd8f104550c5700e27@ec2-79-125-6-250.eu-west-1.compute.amazonaws.com:5432/d4j9oravts15j7"
@@ -19,6 +24,29 @@ db.init_app(app)
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
+
+@app.route('/email',methods=['GET','POST'])
+def email():
+    if request.method == 'GET':
+        return '<form action="/email" method = "POST"><input name="email"><input type="submit">'
+    email = request.form['email']
+    token = s.dumps(email, salt = 'email-confirm')
+    
+    msg = Message('Confirm Email', sender='c.delfg@gmail.com', recipients=[email])
+    
+    link = url_for('confirm_email', token = token, _external=True)
+    msg.body =  'Your link {}'.format(link)
+    mail.send(msg)
+    
+    return 'The email you entered is {}. The token is {}'.format(email,token)
+
+@app.route('/confirm_email/<token>')
+def confirm_email(token):
+    try:
+        email = s.loads(token, salt='email-confirm', max_age=20)
+    except SignatureExpired:
+        return '<h1>The token is expired</h1>'
+    return 'The token works!'
 
 @app.route("/")
 def index():
@@ -35,7 +63,7 @@ def register():
     if "@" not in email:
         return render_template("error.html", message = "Invalid email address")
     password = request.form.get("password")        
-    user = User(username = username, email = email, password = password)
+    user = User(username = username, email = email, password = password,confirmed=False)
     Check_db = User.query.filter(or_(User.username == username, User.email == email)).first()
     if Check_db is None:        
         #send email to user after registration
