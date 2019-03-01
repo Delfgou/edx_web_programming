@@ -43,10 +43,13 @@ def register():
         
     return 'An email with a confirmation link has been sent to your email address'
 
-@app.route('/confirm_email/<token>/<email>')
+@app.route('/confirm_email/<token>')
 def confirm_email(token):
     try:
         email = s.loads(token, salt='email-confirm', max_age=3600)
+        confirm_user = User.query.filter(User.email == email).first()
+        confirm_user.confirmed = True
+        db.session.commit()
         
     except SignatureExpired:
         return '<h1>The token is expired</h1>'
