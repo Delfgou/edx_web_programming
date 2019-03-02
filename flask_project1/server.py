@@ -34,23 +34,22 @@ def register():
         db.session.commit()
         token = s.dumps(email, salt = 'email-confirm')
         msg = Message('Confirm Email', sender='c.delfg@gmail.com', recipients=[email])
-        link = url_for('confirm_email', token = token, _external=True)
+        link = url_for('confirm_email', token = token, _external=True, username=username)
         msg.body =  'Your link is {}'.format(link)
         mail.send(msg)
         
     return '<h1>An email with a confirmation link has been sent to your email address</h1>'
 
-@app.route('/confirm_email/<token>')
-def confirm_email(token):
+@app.route('/confirm_email/<token>/<username>')
+def confirm_email(token,username):
     try:
         email = s.loads(token, salt='email-confirm', max_age=3600)
         confirm_user = User.query.filter(User.email == email).first()
         confirm_user.confirmed = True
-        db.session.commit()
-        
+        db.session.commit()        
     except SignatureExpired:
         return '<h1>The token is expired</h1>'
-    return render_template('welcome.html', message = 'you')
+    return render_template('welcome.html', message = username)
 
 @app.route("/")
 def index():
