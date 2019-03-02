@@ -22,7 +22,7 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-@app.route('/register',methods=['GET','POST'])
+@app.route('/register',methods=['POST'])
 def register():
     username = request.form.get("username")   
     email = request.form.get("email")   
