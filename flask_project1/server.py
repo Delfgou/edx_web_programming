@@ -24,7 +24,6 @@ Session(app)
 
 @app.route('/register',methods=['GET','POST'])
 def register():
-    
     username = request.form.get("username")   
     email = request.form.get("email")   
     password = request.form.get("password")
@@ -34,14 +33,12 @@ def register():
         db.session.add(user)
         db.session.commit()
         token = s.dumps(email, salt = 'email-confirm')
-        
         msg = Message('Confirm Email', sender='c.delfg@gmail.com', recipients=[email])
-        
         link = url_for('confirm_email', token = token, _external=True)
         msg.body =  'Your link is {}'.format(link)
         mail.send(msg)
         
-    return 'An email with a confirmation link has been sent to your email address'
+    return '<h1>An email with a confirmation link has been sent to your email address</h1>'
 
 @app.route('/confirm_email/<token>')
 def confirm_email(token):
@@ -53,39 +50,7 @@ def confirm_email(token):
         
     except SignatureExpired:
         return '<h1>The token is expired</h1>'
-    return 'The token works!'
-
-
-@app.route("/register", methods=["POST"])
-#def register():
-    #username = request.form.get("username")   
-    #email = request.form.get("email")
-    #if "@" not in email:
-        #return render_template("error.html", message = "Invalid email address")
-    #password = request.form.get("password")        
-    #user = User(username = username, email = email, password = password,confirmed=False)
-    #Check_db = User.query.filter(or_(User.username == username, User.email == email)).first()
-    #if Check_db is None:        
-        ##send email to user after registration
-        #try:
-            #db.session.add(user) 
-            #EMAIL_TO = email
-            #server = smtplib.SMTP('smtp.gmail.com:587')
-            #server.ehlo()
-            #server.starttls()
-            #server.login(config.EMAIL_FROM,config.PASSWORD)
-            #subject = "Test. Welcome to books3000"
-            #msg = "Hello {}. Thank you for your registration. This email has been sent automatically after your registration.".format(username)
-            #message = 'Subject: {}\n\n{}'.format(subject,msg)
-            #server.sendmail(config.EMAIL_FROM,EMAIL_TO, message)
-            #server.quit()
-            #print("Success: Email sent!")   
-            #db.session.commit()
-            #return render_template('success.html')
-        #except:
-            #return render_template("error.html", message = "Invalid email address")
-    #else:
-        #return render_template('error.html', message = "Username or email has already been used")
+    return render_template('welcome.html', message = 'you')
 
 @app.route("/")
 def index():
@@ -103,7 +68,7 @@ def sign_in():
     session['username'] = request.form['username']
     if " " in input_user or " " in input_password:
         return render_template('error.html', message = "You're trying to hack us!")    
-    user = User.query.filter_by(username = input_user, password = input_password).first()
+    user = User.query.filter_by(username = input_user, password = input_password, confirmed = True).first()
     if user is None:
         return render_template("error.html", message="You are not registered")    
     return render_template('welcome.html', message = input_user)
