@@ -1,0 +1,25 @@
+$width: 100%;
+$background: lightgreen;
+body{
+    margin:50px;
+}
+div.bullets{
+    border-color : green;
+    padding : 10px;
+    border-style: solid;
+    float:right;
+    height:100px;
+    width: 300px;
+}
+table, td{
+    padding: 3px;
+}
+@media only screen and (max-width: 600px) {
+  body {
+    background-color: $background;
+  }
+  img{
+    width: $width;
+    }
+  
+}

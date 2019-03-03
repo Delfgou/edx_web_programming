@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            book page
+        </title>
+    </head>
+    <style>
+      table, th, td {
+      border: 1px solid;
+      border-collapse: collapse;
+      padding: 5px;
+      }
+    </style>
+    <h1>
+    f"{session['username']}"
+    </h1>
+    <body>
+        <form action = "{{ url_for('sign_out')}}" method = "post">
+            <button>
+                Sign out
+            </button>
+        </form>
+        <form action = "{{ url_for('go_to_search')}}" method = "post">
+            <button>
+                Search
+            </button>
+        </form>
+        <br />
+        <table style="width:60%">
+          <tr>
+            <th>ISBN</th>
+            <th>TITLE</th>
+            <th>AUTHOR</th>
+            <th>YEAR</th>
+            <th>AVERAGE RATING</th>
+            <th>NUMBER OF RATINGS</th>
+          </tr>
+          <tr>
+            <td>{{ isbn }}</td>
+            <td>{{ title }}</td>
+            <td>{{ author }}</td>
+            <td>{{ year }}</td>
+            <td>{{ avg }}</td>
+            <td>{{ numb }}</td>
+          </tr>
+        </table>
+        <br />
+        <br />
+        <br />
+        <form action = "{{ url_for('rating', isbn=isbn)}}" method = "post" >
+            <input type = "int" name = "rating" placeholder = "Rating" size="3">
+            <input type = "text" name = "comment" placeholder = "Enter your review here" size="200">
+            <button>
+                Submint
+            </button>
+        </form>
+    </body>
+</html>

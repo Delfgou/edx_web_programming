@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            books3000
+        </title>
+    </head>
+    
+    <body>
+        <h1> {{ message }} </h1>
+        <form action = "{{ url_for('sign_in')}}" method = "post">
+            <input type = "text" name = "username" placeholder = "Enter your name here">
+            <input type = "password" name = "password" placeholder = "Enter your password here">
+            <button>
+                Sign in
+            </button>
+        </form>
+        <form action = "{{ url_for('go_to_register')}}" method = "post">
+            <button>
+                register
+            </button>
+        </form>
+    </body>
+</html>

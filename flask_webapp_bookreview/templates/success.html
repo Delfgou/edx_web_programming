@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>
+            books3000
+        </title>
+    </head>
+    
+    <body>
+        <form action = "{{ url_for('sign_out')}}" method = "post">
+            <button>
+                Sign out
+            </button>
+        </form>
+        <form action = "{{ url_for('go_to_search')}}" method = "post">
+            <button>
+                Search
+            </button>
+        </form>
+        <h1>
+            You have been registered successfully!
+        </h1>
+    </body>
+</html>
