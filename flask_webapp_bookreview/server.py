@@ -27,6 +27,7 @@ def register():
     username = escape(request.form.get("username"))   
     email = escape(request.form.get("email"))   
     password = escape(request.form.get("password"))
+    session['username'] = escape(request.form['username'])    
     user = User(username = username, email = email, password = password,confirmed=False)
     Check_db = User.query.filter(or_(User.username == username, User.email == email)).first()
     if Check_db is None:
