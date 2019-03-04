@@ -65,12 +65,14 @@ def go_to_register():
 @app.route("/sign_in", methods=["GET", "POST"])
 def sign_in():
     input_user = escape(request.form.get("username"))
-    input_password = escape(request.form.get("password"))
     session['username'] = escape(request.form['username']) 
     user = User.query.filter_by(username = input_user, confirmed = True).first()
     if user is None:
         return render_template("error.html", message="You are not registered")    
     db_password = (User.query.filter_by(username = input_user, confirmed = True).first()).password
+    db_salt = (User.query.filter_by(username = input_user, confirmed = True).first()).salt
+    input_password = f'{escape(request.form.get("password"))}{db_salt}'    
+    #password = generate_password_hash(f'{escape(request.form.get("password"))}{salt}')
     if check_password_hash(db_password,input_password):            
         return render_template('welcome.html', message = input_user)
     else:
