@@ -30,13 +30,12 @@ def register():
     Check_db = User.query.filter(or_(User.username == username, User.email == email)).first()
     if Check_db is None:
         db.session.add(user)
-        db.session.commit()
+        db.session.commit()        
         token = s.dumps(email, salt = 'email-confirm')
-        msg = Message('Confirm Email', sender='c.delfg@gmail.com', recipients=[email])
+        msg = Message('Confirm Email', sender='hansbooks3000@gmail.com', recipients=[email])
         link = url_for('confirm_email', token = token, _external=True, username=username)
         msg.body =  'Your link is {}'.format(link)
-        mail.send(msg)
-        
+        mail.send(msg)        
     return '<h1>An email with a confirmation link has been sent to your email address</h1>'
 
 @app.route('/confirm_email/<token>/<username>')
