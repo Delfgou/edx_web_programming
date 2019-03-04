@@ -78,6 +78,7 @@ def go_to_search():
 
 @app.route("/sign_out", methods=["POST"])
 def sign_out():
+    session.pop('username', None)
     return render_template('index.html', message="You are logged out")
 
 @app.route("/search", methods=["POST"])
