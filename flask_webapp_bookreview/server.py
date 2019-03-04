@@ -13,11 +13,10 @@ app = Flask(__name__)
 app.config.from_pyfile('config.py')
 mail = Mail(app)
 s = URLSafeTimedSerializer('\x00\xb7\x14Y\x19\xbc\xab*\xd7\x99\xe7-\xe1\xf1\xee\x1b\x800\xe4\xc9\xe9\x06\x142')
-app.secret_key = "3i\xf2\xf5@\xa5\xdb\xc7m\xe8_U\x16\xc5a6\x04\x1d\xee]\xb9\x9fS\x89"
 app.config["SQLALCHEMY_DATABASE_URI"] = "postgres://vhltvfuekxyisp:4e8e3284506f4903c26843cbeca2e8bc2ed4693c95ddd2dd8f104550c5700e27@ec2-79-125-6-250.eu-west-1.compute.amazonaws.com:5432/d4j9oravts15j7"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db.init_app(app)
-
+app.secret_key = "3i\xf2\xf5@\xa5\xdb\xc7m\xe8_U\x16\xc5a6\x04\x1d\xee]\xb9\x9fS\x89"
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
