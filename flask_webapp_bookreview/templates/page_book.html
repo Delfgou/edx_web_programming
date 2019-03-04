@@ -13,7 +13,7 @@
       }
     </style>
     <h1>
-    f"{session['username']}"
+    Hallo {{ session['username'] }}
     </h1>
     <body>
         <form action = "{{ url_for('sign_out')}}" method = "post">

@@ -6,12 +6,14 @@ from sqlalchemy import or_
 from flask_session import Session
 from flask_mail import Mail,Message
 from itsdangerous import URLSafeTimedSerializer, SignatureExpired
+import requests
 
 
 
 app = Flask(__name__)
 app.config.from_pyfile('config.py')
 s = URLSafeTimedSerializer('\x00\xb7\x14Y\x19\xbc\xab*\xd7\x99\xe7-\xe1\xf1\xee\x1b\x800\xe4\xc9\xe9\x06\x142')
+mail = Mail(app)
 app.config["SQLALCHEMY_DATABASE_URI"] = "postgres://vhltvfuekxyisp:4e8e3284506f4903c26843cbeca2e8bc2ed4693c95ddd2dd8f104550c5700e27@ec2-79-125-6-250.eu-west-1.compute.amazonaws.com:5432/d4j9oravts15j7"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db.init_app(app)
@@ -19,7 +21,6 @@ app.secret_key = "3i\xf2\xf5@\xa5\xdb\xc7m\xe8_U\x16\xc5a6\x04\x1d\xee]\xb9\x9fS
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
-mail = Mail(app)
 
 @app.route('/register',methods=['POST'])
 def register():
@@ -63,6 +64,7 @@ def sign_in():
     input_user = request.form.get("username")
     input_password = request.form.get("password")  
     session['username'] = request.form['username']
+    session_username = session['username']
     if " " in input_user or " " in input_password:
         return render_template('error.html', message = "You're trying to hack us!")    
     user = User.query.filter_by(username = input_user, password = input_password, confirmed = True).first()
