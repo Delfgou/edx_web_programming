@@ -24,9 +24,9 @@ Session(app)
 
 @app.route('/register',methods=['POST'])
 def register():
-    username = request.form.get("username")   
-    email = request.form.get("email")   
-    password = request.form.get("password")
+    username = escape(request.form.get("username"))   
+    email = escape(request.form.get("email"))   
+    password = escape(request.form.get("password"))
     user = User(username = username, email = email, password = password,confirmed=False)
     Check_db = User.query.filter(or_(User.username == username, User.email == email)).first()
     if Check_db is None:
@@ -61,10 +61,9 @@ def go_to_register():
 
 @app.route("/sign_in", methods=["GET", "POST"])
 def sign_in():
-    input_user = request.form.get("username")
-    input_password = request.form.get("password")  
-    session['username'] = request.form['username']
-    session_username = session['username']
+    input_user = escape(request.form.get("username"))
+    input_password = escape(request.form.get("password")) 
+    session['username'] = escape(request.form['username'])
     if " " in input_user or " " in input_password:
         return render_template('error.html', message = "You're trying to hack us!")    
     user = User.query.filter_by(username = input_user, password = input_password, confirmed = True).first()
@@ -83,10 +82,10 @@ def sign_out():
 
 @app.route("/search", methods=["POST"])
 def search():
-    isbn = request.form.get("isbn")
-    title = request.form.get("title")
-    author = request.form.get("author")
-    year = request.form.get("year")     
+    isbn = escape(request.form.get("isbn"))
+    title = escape(request.form.get("title"))
+    author = escape(request.form.get("author"))
+    year = escape(request.form.get("year"))    
     results_isbn = Book.query.filter(Book.isbn.ilike(f"%{isbn}%")).all()
     results_title = Book.query.filter(Book.title.ilike(f"%{title}%")).all()
     results_author = Book.query.filter(Book.author.ilike(f"%{author}%")).all()
@@ -108,8 +107,8 @@ def details(isbn,title,author,year):
 
 @app.route("/rating/<string:isbn>", methods =["post"])
 def rating(isbn):
-    rating = request.form.get("rating") 
-    comment = request.form.get("comment") 
+    rating = escape(request.form.get("rating")) 
+    comment = escape(request.form.get("comment"))
     try: 
         review = Review(isbn = isbn, rating = rating, comment = comment)
         db.session.add(review)
