@@ -1,5 +1,6 @@
 import os
 from flask import Flask, render_template, request, session, url_for, escape
+from werkzeug.security import generate_password_hash, check_password_hash
 from models import *
 import config
 from sqlalchemy import or_
@@ -26,7 +27,7 @@ Session(app)
 def register():
     username = escape(request.form.get("username"))   
     email = escape(request.form.get("email"))   
-    password = escape(request.form.get("password"))
+    password = generate_password_hash(escape(request.form.get("password")))
     session['username'] = escape(request.form['username'])    
     user = User(username = username, email = email, password = password,confirmed=False)
     Check_db = User.query.filter(or_(User.username == username, User.email == email)).first()
@@ -63,14 +64,16 @@ def go_to_register():
 @app.route("/sign_in", methods=["GET", "POST"])
 def sign_in():
     input_user = escape(request.form.get("username"))
-    input_password = escape(request.form.get("password")) 
-    session['username'] = escape(request.form['username'])
-    if " " in input_user or " " in input_password:
-        return render_template('error.html', message = "You're trying to hack us!")    
-    user = User.query.filter_by(username = input_user, password = input_password, confirmed = True).first()
+    input_password = escape(request.form.get("password"))
+    session['username'] = escape(request.form['username']) 
+    user = User.query.filter_by(username = input_user, confirmed = True).first()
     if user is None:
         return render_template("error.html", message="You are not registered")    
-    return render_template('welcome.html', message = input_user)
+    db_password = (User.query.filter_by(username = input_user, confirmed = True).first()).password
+    if check_password_hash(db_password,input_password):            
+        return render_template('welcome.html', message = input_user)
+    else:
+        return render_template("error.html", message="Wrong password")
 
 @app.route("/go_to_search", methods=["POST"])
 def go_to_search():
