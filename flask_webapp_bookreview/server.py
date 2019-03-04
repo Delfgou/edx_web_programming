@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, request, session, url_for
+from flask import Flask, render_template, request, session, url_for, escape
 from models import *
 import config
 from sqlalchemy import or_
@@ -13,7 +13,7 @@ app = Flask(__name__)
 app.config.from_pyfile('config.py')
 mail = Mail(app)
 s = URLSafeTimedSerializer('Thisisasecret!')
-app.secret_key = "any random string"
+app.secret_key = "3i\xf2\xf5@\xa5\xdb\xc7m\xe8_U\x16\xc5a6\x04\x1d\xee]\xb9\x9fS\x89"
 app.config["SQLALCHEMY_DATABASE_URI"] = "postgres://vhltvfuekxyisp:4e8e3284506f4903c26843cbeca2e8bc2ed4693c95ddd2dd8f104550c5700e27@ec2-79-125-6-250.eu-west-1.compute.amazonaws.com:5432/d4j9oravts15j7"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db.init_app(app)
