@@ -154,7 +154,12 @@ def rating(isbn,title,author,year,avg,numb,reviews):
     else:
         return 'You have rated this book already'
     
-
+@app.route('/api/<isbn>', methods = ['get'])
+def api(isbn):
+    db_full = Book.query.filter(Book.isbn==isbn).first()
+    
+    title = db_full.title
+    return title
 
 if __name__ == "__main__":
     with app.app_context():
