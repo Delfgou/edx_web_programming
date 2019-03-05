@@ -17,6 +17,13 @@ db.init_app(app)
 def main():
     db.create_all()
     
+    list_isbn = []
+    all_isbns = books.query.all()
+    for isbn in all_isbns:
+        list_isbn.apped(isbn.isbn)
+    
+     
+    
     #user1 = User(username = "xaver",email = "x@f.ch",password = "123")
     #db.session.add(user1)
     #db.session.commit()
