@@ -22,8 +22,11 @@ def main():
     for isbn in all_isbns:
         list_isbn.apped(isbn.isbn)
     
-     
-    
+    for item in list_isbn:
+        update_book = books.query.filter(books.isbn == item).first()
+        
+        
+    #reviewed_before = Review.query.filter(Review.isbn == isbn, Review.username == session['username']).first()
     #user1 = User(username = "xaver",email = "x@f.ch",password = "123")
     #db.session.add(user1)
     #db.session.commit()
