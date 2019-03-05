@@ -93,9 +93,12 @@ def reset_password():
     salt = change_password.salt 
     pepper = choice(ascii_letters)
     new_hash = generate_password_hash(f'{new_password}{salt}{pepper}')    
-    change_password.password = new_hash    
-    
-    return 'Success'
+    change_password.password = new_hash 
+    db.session.commit()
+    msg = Message('Reset Email', sender='hansbooks3000@gmail.com', recipients=[email])
+    msg.body =  f'Your new password is {new_password}'
+    mail.send(msg)     
+    return '<h3>A new password has been sent to your email.</h3>'
     
     
     
