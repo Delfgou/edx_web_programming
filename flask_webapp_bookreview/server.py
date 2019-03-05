@@ -140,8 +140,10 @@ def details(isbn,title,author,year):
 def rating(isbn,title,author,year,avg,numb,reviews):
     rating = escape(request.form.get("rating")) 
     comment = escape(request.form.get("comment"))
+    #reviewed_before = Review.query.filter(Review.isbn == isbn).first()
+    #if 
     try: 
-        review = Review(isbn = isbn, rating = rating, comment = comment)
+        review = Review(isbn = isbn, rating = rating, comment = comment, username=session['username'])
         db.session.add(review)
         db.session.commit()  
         reviews = Review.query.filter(Review.isbn == isbn) 

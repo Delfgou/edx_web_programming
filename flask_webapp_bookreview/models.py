@@ -26,3 +26,4 @@ class Review(db.Model):
     isbn = db.Column(db.String)
     rating = db.Column(db.Integer)
     comment = db.Column(db.String)
+    username = db.Column(db.String)
