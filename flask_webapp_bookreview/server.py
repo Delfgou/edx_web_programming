@@ -157,9 +157,14 @@ def rating(isbn,title,author,year,avg,numb,reviews):
 @app.route('/api/<isbn>', methods = ['get'])
 def api(isbn):
     db_full = Book.query.filter(Book.isbn==isbn).first()
-    isbn = db_full.isbn
     title = db_full.title
-    api_json = data = {"title": title, "isbn": isbn}
+    author = db_full.author
+    year = db_full.year
+    isbn = db_full.isbn
+    #"review_count": 28,
+    #"average_score": 5.0    
+    
+    api_json = data = {"title": title, "author": author, "year": year,"isbn": isbn}
     json_data = json.dumps(api_json)
     return json_data
 
