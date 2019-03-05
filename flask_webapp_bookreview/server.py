@@ -96,9 +96,9 @@ def reset_password():
     change_password.password = new_hash 
     db.session.commit()
     msg = Message('Reset Email', sender='hansbooks3000@gmail.com', recipients=[email])
-    msg.body =  f'Your new password is {new_password}'
+    msg.body =  f'Your new password is {new_password}. Please contact hansbooks3000@gmail.com if you did not reset your password.'
     mail.send(msg)     
-    return '<h3>A new password has been sent to your email.</h3>'
+    return '<h3>A new password has been sent to your email.</h3> <form action = "/" method = "get"> <button> Sign in </button> </form>'
     
     
     
