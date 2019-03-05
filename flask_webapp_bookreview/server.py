@@ -83,11 +83,22 @@ def sign_in():
 
 @app.route('/forgot_password', methods = ['post'])
 def forgot_password():
-    return ''' Enter your email adress to reset your password: <form action = "{{ url_for('reset_password')}}" method = 'post'><p><input type=email name=name><input type=submit value=reset></form>'''
+    return render_template('reset_password.html')
 
-#@app.route('/reset_password', methods = ['post'])
-#def reset_password():
-    #new_password = 
+@app.route('/reset_password', methods = ['post'])
+def reset_password():
+    email = escape(request.form.get("email"))
+    new_password = ''.join(choice(ascii_letters) for i in range(12))
+    change_password = User.query.filter(User.email == email).first()
+    salt = change_password.salt 
+    pepper = choice(ascii_letters)
+    new_hash = generate_password_hash(f'{new_password}{salt}{pepper}')    
+    change_password.password = new_hash    
+    
+    return 'Success'
+    
+    
+    
 
 @app.route("/go_to_search", methods=["POST"])
 def go_to_search():
