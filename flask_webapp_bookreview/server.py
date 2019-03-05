@@ -1,6 +1,6 @@
 import os
 from flask import Flask, render_template, request, session, url_for, escape
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash, gen_salt
 from models import *
 import config
 from sqlalchemy import or_
@@ -27,7 +27,7 @@ Session(app)
 def register():
     username = escape(request.form.get("username"))   
     email = escape(request.form.get("email"))  
-    salt = os.urandom(5)    
+    salt = gen_salt(5)    
     password = generate_password_hash(f'{escape(request.form.get("password"))}{salt}')
     session['username'] = escape(request.form['username'])    
     user = User(username = username, email = email, salt = salt, password = password,confirmed=False)
