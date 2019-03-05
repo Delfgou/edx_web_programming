@@ -8,6 +8,8 @@ from flask_session import Session
 from flask_mail import Mail,Message
 from itsdangerous import URLSafeTimedSerializer, SignatureExpired
 import requests
+import string
+import random
 
 
 
@@ -28,7 +30,8 @@ def register():
     username = escape(request.form.get("username"))   
     email = escape(request.form.get("email"))  
     salt = gen_salt(5)    
-    password = generate_password_hash(f'{escape(request.form.get("password"))}{salt}')
+    pepper = random.choice(string.ascii_letters)
+    password = generate_password_hash(f'{escape(request.form.get("password"))}{salt}{pepper}')
     session['username'] = escape(request.form['username'])    
     user = User(username = username, email = email, salt = salt, password = password,confirmed=False)
     Check_db = User.query.filter(or_(User.username == username, User.email == email)).first()
@@ -72,11 +75,11 @@ def sign_in():
     db_password = (User.query.filter_by(username = input_user, confirmed = True).first()).password
     db_salt = (User.query.filter_by(username = input_user, confirmed = True).first()).salt
     input_password = f'{escape(request.form.get("password"))}{db_salt}'    
-    #password = generate_password_hash(f'{escape(request.form.get("password"))}{salt}')
-    if check_password_hash(db_password,input_password):            
-        return render_template('welcome.html', message = input_user)
-    else:
-        return render_template("error.html", message="Wrong password")
+    for character in string.ascii_letters:
+        if check_password_hash(db_password,f'{input_password}{character}'):            
+            return render_template('welcome.html', message = input_user)
+    
+    return render_template("error.html", message="Wrong password")
 
 @app.route("/go_to_search", methods=["POST"])
 def go_to_search():
