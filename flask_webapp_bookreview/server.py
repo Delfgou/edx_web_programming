@@ -8,8 +8,8 @@ from flask_session import Session
 from flask_mail import Mail,Message
 from itsdangerous import URLSafeTimedSerializer, SignatureExpired
 import requests
-import string
-import random
+from string import ascii_letters
+from random import choice
 
 
 
@@ -30,7 +30,7 @@ def register():
     username = escape(request.form.get("username"))   
     email = escape(request.form.get("email"))  
     salt = gen_salt(5)    
-    pepper = random.choice(string.ascii_letters)
+    pepper = choice(ascii_letters)
     password = generate_password_hash(f'{escape(request.form.get("password"))}{salt}{pepper}')
     session['username'] = escape(request.form['username'])    
     user = User(username = username, email = email, salt = salt, password = password,confirmed=False)
@@ -76,10 +76,18 @@ def sign_in():
     db_password = (User.query.filter_by(username = input_user, confirmed = True).first()).password
     db_salt = (User.query.filter_by(username = input_user, confirmed = True).first()).salt
     input_password = f'{escape(request.form.get("password"))}{db_salt}'    
-    for character in string.ascii_letters:
+    for character in ascii_letters:
         if check_password_hash(db_password,f'{input_password}{character}'):            
             return render_template('welcome.html', message = input_user)    
     return render_template("error.html", message="Wrong password")
+
+@app.route('/forgot_password', methods = ['post'])
+def forgot_password():
+    return ''' Enter your email adress to reset your password: <form action = "{{ url_for('reset_password')}}" method = 'post'><p><input type=email name=name><input type=submit value=reset></form>'''
+
+#@app.route('/reset_password', methods = ['post'])
+#def reset_password():
+    #new_password = 
 
 @app.route("/go_to_search", methods=["POST"])
 def go_to_search():
