@@ -79,7 +79,7 @@ def sign_in():
     for character in ascii_letters:
         if check_password_hash(db_password,f'{input_password}{character}'):            
             return render_template('welcome.html', message = input_user)    
-    return render_template("error.html", message="Wrong password")
+    return render_template("error.html", message="Username or password invalid.")
 
 @app.route('/forgot_password', methods = ['post'])
 def forgot_password():
@@ -123,7 +123,6 @@ def search():
     if results== []:
         return render_template('error.html', message = "No results")
     return render_template('search_results.html', results = results)    
-    
 
 @app.route("/<string:isbn>/<string:title>/<string:author>/<string:year>", methods =["post"])
 def details(isbn,title,author,year):
@@ -135,7 +134,6 @@ def details(isbn,title,author,year):
     reviews=reviews[::-1]
     return render_template('page_book.html', isbn=isbn, title=title, author=author,year=year,avg=avg, numb=numb, reviews=reviews)
 
-
 @app.route("/rating/<string:isbn>/<string:title>/<string:author>/<string:year>/<string:avg>/<string:numb>/<string:reviews>", methods =["post"])
 def rating(isbn,title,author,year,avg,numb,reviews):
     rating = escape(request.form.get("rating")) 
@@ -144,6 +142,7 @@ def rating(isbn,title,author,year,avg,numb,reviews):
     if reviewed_before is None:
         try: 
             review = Review(isbn = isbn, rating = rating, comment = comment, username=session['username'])
+            
             db.session.add(review)
             db.session.commit()  
             reviews = Review.query.filter(Review.isbn == isbn) 
@@ -154,6 +153,7 @@ def rating(isbn,title,author,year,avg,numb,reviews):
     else:
         return 'You have rated this book already'
     
+<<<<<<< HEAD
 @app.route('/api/<isbn>', methods = ['get'])
 def api(isbn):
     db_full = Book.query.filter(Book.isbn==isbn).first()
@@ -168,6 +168,8 @@ def api(isbn):
     json_data = json.dumps(api_json)
     return json_data
 
+=======
+>>>>>>> recalculate_rating
 if __name__ == "__main__":
     with app.app_context():
         main()     

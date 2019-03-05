@@ -24,6 +24,7 @@ def main():
     
     for item in list_isbn:
         update_book = books.query.filter(books.isbn == item).first()
+        update_book.
         
         
     #reviewed_before = Review.query.filter(Review.isbn == isbn, Review.username == session['username']).first()
