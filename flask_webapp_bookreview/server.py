@@ -132,6 +132,7 @@ def details(isbn,title,author,year):
     numb = res.json()['books'][0]['ratings_count']
     avg = res.json()['books'][0]['average_rating']
     reviews = Review.query.filter(Review.isbn == isbn)
+    reviews=reviews[::-1]
     return render_template('page_book.html', isbn=isbn, title=title, author=author,year=year,avg=avg, numb=numb, reviews=reviews)
 
 
@@ -143,7 +144,8 @@ def rating(isbn,title,author,year,avg,numb,reviews):
         review = Review(isbn = isbn, rating = rating, comment = comment)
         db.session.add(review)
         db.session.commit()  
-        reviews = Review.query.filter(Review.isbn == isbn)        
+        reviews = Review.query.filter(Review.isbn == isbn) 
+        reviews=reviews[::-1]        
         return render_template('page_book.html', isbn=isbn, title=title, author=author,year=year,avg=avg, numb=numb, reviews=reviews)        
     except:
         return render_template('error.html', message = "Rating must be a number!")
