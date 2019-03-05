@@ -140,17 +140,20 @@ def details(isbn,title,author,year):
 def rating(isbn,title,author,year,avg,numb,reviews):
     rating = escape(request.form.get("rating")) 
     comment = escape(request.form.get("comment"))
-    #reviewed_before = Review.query.filter(Review.isbn == isbn).first()
-    #if 
-    try: 
-        review = Review(isbn = isbn, rating = rating, comment = comment, username=session['username'])
-        db.session.add(review)
-        db.session.commit()  
-        reviews = Review.query.filter(Review.isbn == isbn) 
-        reviews=reviews[::-1]        
-        return render_template('page_book.html', isbn=isbn, title=title, author=author,year=year,avg=avg, numb=numb, reviews=reviews)        
-    except:
-        return render_template('error.html', message = "Rating must be a number!")
+    #    user = User.query.filter_by(username = input_user, confirmed = True).first()
+    reviewed_before = Review.query.filter(Review.isbn == isbn, Review.username == session['username']).first()
+    if reviewed_before is None:
+        try: 
+            review = Review(isbn = isbn, rating = rating, comment = comment, username=session['username'])
+            db.session.add(review)
+            db.session.commit()  
+            reviews = Review.query.filter(Review.isbn == isbn) 
+            reviews=reviews[::-1]        
+            return render_template('page_book.html', isbn=isbn, title=title, author=author,year=year,avg=avg, numb=numb, reviews=reviews)        
+        except:
+            return render_template('error.html', message = "Rating must be a number!")
+    else:
+        return 'You have rated this book already'
     
 
 
