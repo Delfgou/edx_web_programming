@@ -19,6 +19,8 @@ class Book(db.Model):
     title = db.Column(db.String)
     author = db.Column(db.String)
     year = db.Column(db.String)
+    average_rating = db.Column(db.Integer)
+    number_of_ratings = db.Column(db.Integer)
 
 class Review(db.Model):
     __tablename__="reviews"
