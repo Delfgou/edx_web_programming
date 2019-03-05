@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, request, session, url_for, escape
+from flask import Flask, render_template, request, session, url_for, escape, redirect
 from werkzeug.security import generate_password_hash, check_password_hash, gen_salt
 from models import *
 import config
@@ -99,9 +99,6 @@ def reset_password():
     msg.body =  f'Your new password is {new_password}. Please contact hansbooks3000@gmail.com if you did not reset your password.'
     mail.send(msg)     
     return '<h3>A new password has been sent to your email.</h3> <form action = "/" method = "get"> <button> Sign in </button> </form>'
-    
-    
-    
 
 @app.route("/go_to_search", methods=["POST"])
 def go_to_search():
@@ -134,18 +131,20 @@ def details(isbn,title,author,year):
     res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": key, "isbns": isbn})
     numb = res.json()['books'][0]['ratings_count']
     avg = res.json()['books'][0]['average_rating']
-    return render_template('page_book.html', isbn=isbn, title=title, author=author,year=year,avg=avg, numb=numb)
+    reviews = Review.query.filter(Review.isbn == isbn)
+    return render_template('page_book.html', isbn=isbn, title=title, author=author,year=year,avg=avg, numb=numb, reviews=reviews)
 
 
-@app.route("/rating/<string:isbn>", methods =["post"])
-def rating(isbn):
+@app.route("/rating/<string:isbn>/<string:title>/<string:author>/<string:year>/<string:avg>/<string:numb>/<string:reviews>", methods =["post"])
+def rating(isbn,title,author,year,avg,numb,reviews):
     rating = escape(request.form.get("rating")) 
     comment = escape(request.form.get("comment"))
     try: 
         review = Review(isbn = isbn, rating = rating, comment = comment)
         db.session.add(review)
-        db.session.commit()        
-        return render_template('success.html')
+        db.session.commit()  
+        reviews = Review.query.filter(Review.isbn == isbn)        
+        return render_template('page_book.html', isbn=isbn, title=title, author=author,year=year,avg=avg, numb=numb, reviews=reviews)        
     except:
         return render_template('error.html', message = "Rating must be a number!")
     

@@ -48,12 +48,24 @@
         <br />
         <br />
         <br />
-        <form action = "{{ url_for('rating', isbn=isbn)}}" method = "post" >
+        <form action = "{{ url_for('rating', isbn=isbn, title=title, author=author,year=year,avg=avg, numb=numb, reviews=reviews)}}" method = "post" >
             <input type = "int" name = "rating" placeholder = "Rating" size="3">
             <input type = "text" name = "comment" placeholder = "Enter your review here" size="200">
             <button>
-                Submint
+                Submit
             </button>
         </form>
+        
+        <div>
+         hello
+        </div>
+        <div>
+        <ul>
+            {% for review in reviews %}
+              <li>{{ review.comment }}</li>
+            {% endfor %}  
+        </ul>
+
+        </div>
     </body>
 </html>
