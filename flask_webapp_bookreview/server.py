@@ -10,7 +10,7 @@ from itsdangerous import URLSafeTimedSerializer, SignatureExpired
 import requests
 from string import ascii_letters
 from random import choice
-
+import json
 
 
 app = Flask(__name__)
@@ -157,9 +157,11 @@ def rating(isbn,title,author,year,avg,numb,reviews):
 @app.route('/api/<isbn>', methods = ['get'])
 def api(isbn):
     db_full = Book.query.filter(Book.isbn==isbn).first()
-    
+    isbn = db_full.isbn
     title = db_full.title
-    return title
+    api_json = data = {"title": title, "isbn": isbn}
+    json_data = json.dumps(api_json)
+    return json_data
 
 if __name__ == "__main__":
     with app.app_context():
