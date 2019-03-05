@@ -44,7 +44,7 @@ def register():
         msg.body =  'Your link is {}'.format(link)
         mail.send(msg)        
         session['username'] = escape(request.form['username'])     
-    return '<h1>An email with a confirmation link has been sent to your email address</h1>'
+    return '<h3> Email or username is already taken.</h3>'
 
 @app.route('/confirm_email/<token>/<username>')
 def confirm_email(token,username):
@@ -140,7 +140,6 @@ def details(isbn,title,author,year):
 def rating(isbn,title,author,year,avg,numb,reviews):
     rating = escape(request.form.get("rating")) 
     comment = escape(request.form.get("comment"))
-    #    user = User.query.filter_by(username = input_user, confirmed = True).first()
     reviewed_before = Review.query.filter(Review.isbn == isbn, Review.username == session['username']).first()
     if reviewed_before is None:
         try: 
