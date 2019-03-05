@@ -43,6 +43,7 @@ def register():
         link = url_for('confirm_email', token = token, _external=True, username=username)
         msg.body =  'Your link is {}'.format(link)
         mail.send(msg)        
+        session['username'] = escape(request.form['username'])     
     return '<h1>An email with a confirmation link has been sent to your email address</h1>'
 
 @app.route('/confirm_email/<token>/<username>')
@@ -77,8 +78,7 @@ def sign_in():
     input_password = f'{escape(request.form.get("password"))}{db_salt}'    
     for character in string.ascii_letters:
         if check_password_hash(db_password,f'{input_password}{character}'):            
-            return render_template('welcome.html', message = input_user)
-    
+            return render_template('welcome.html', message = input_user)    
     return render_template("error.html", message="Wrong password")
 
 @app.route("/go_to_search", methods=["POST"])
