@@ -18,13 +18,13 @@ def main():
     db.create_all()
     
     list_isbn = []
-    all_isbns = books.query.all()
+    all_isbns = Book.query.all()
     for isbn in all_isbns:
         list_isbn.apped(isbn.isbn)
     
-    for item in list_isbn:
-        update_book = books.query.filter(books.isbn == item).first()
-        update_book.
+    #for item in list_isbn:
+        #update_book = books.query.filter(books.isbn == item).first()
+        #update_book.
         
         
     #reviewed_before = Review.query.filter(Review.isbn == isbn, Review.username == session['username']).first()
