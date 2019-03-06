@@ -132,17 +132,26 @@ def details(isbn,title,author,year):
 
 @app.route("/rating/<string:isbn>/<string:title>/<string:author>/<string:year>/<string:average_score>/<string:review_count>/<string:reviews>", methods =["post"])
 def rating(isbn,title,author,year,average_score,review_count,reviews):
-    rating = escape(request.form.get("rating")) 
+    rating = int(escape(request.form.get("rating")))
     comment = escape(request.form.get("comment"))
     reviewed_before = Review.query.filter(Review.isbn == isbn, Review.username == session['username']).first()
     if reviewed_before is None:
         try: 
             review = Review(isbn = isbn, rating = rating, comment = comment, username=session['username'])
             book = Book.query.filter(Book.isbn == isbn).first()
-            book.average_score = ((book.average_score * book.review_count) + rating) / (book.review_count + 1)
-            book.review_count += 1            
+            score_before = book.average_score
+            count_before = book.review_count
+            count_after = count_before + 1
+            score_after = (score_before * count_before + rating) / count_after
+            #book.average_score = ((book.average_score * book.review_count) + rating) / (book.review_count + 1)
+            #book.review_count += 1    
+            book.average_score = score_after
+            book.review_count = count_after
             db.session.add(review)
             db.session.commit()  
+            book = Book.query.filter(Book.isbn == isbn).first()
+            average_score = book.average_score
+            review_count = book.review_count
             reviews = Review.query.filter(Review.isbn == isbn) 
             reviews=reviews[::-1]        
             return render_template('page_book.html', isbn=isbn, title=title, author=author,year=year,average_score=average_score, review_count=review_count, reviews=reviews)        
