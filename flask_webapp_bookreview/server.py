@@ -142,9 +142,7 @@ def rating(isbn,title,author,year,average_score,review_count,reviews):
             score_before = book.average_score
             count_before = book.review_count
             count_after = count_before + 1
-            score_after = (score_before * count_before + rating) / count_after
-            #book.average_score = ((book.average_score * book.review_count) + rating) / (book.review_count + 1)
-            #book.review_count += 1    
+            score_after = (score_before * count_before + rating) / count_after  
             book.average_score = score_after
             book.review_count = count_after
             db.session.add(review)
