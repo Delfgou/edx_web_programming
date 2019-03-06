@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, request, session, url_for, escape, redirect
+from flask import Flask, render_template, request, session, url_for, escape, redirect, abort
 from werkzeug.security import generate_password_hash, check_password_hash, gen_salt
 from models import *
 import config
@@ -162,15 +162,18 @@ def rating(isbn,title,author,year,average_score,review_count,reviews):
 @app.route('/api/<isbn>', methods = ['get'])
 def api(isbn):
     db_full = Book.query.filter(Book.isbn==isbn).first()
-    title = db_full.title
-    author = db_full.author
-    year = db_full.year
-    isbn = db_full.isbn
-    review_count = db_full.review_count
-    average_score = db_full.average_score
-    api_json = data = {"title": title, "author": author, "year": year,"isbn": isbn, "review_count": review_count, "average_score": average_score}
-    json_data = json.dumps(api_json)
-    return json_data
+    if db_full is not None:
+        title = db_full.title
+        author = db_full.author
+        year = db_full.year
+        isbn = db_full.isbn
+        review_count = db_full.review_count
+        average_score = db_full.average_score
+        api_json = data = {"title": title, "author": author, "year": year,"isbn": isbn, "review_count": review_count, "average_score": average_score}
+        json_data = json.dumps(api_json)
+        return json_data
+    else:
+        abort(404)
 
 if __name__ == "__main__":
     with app.app_context():
