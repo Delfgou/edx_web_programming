@@ -150,7 +150,7 @@ def rating(isbn,title,author,year,average_score,review_count,reviews):
             db.session.add(review)
             db.session.commit()  
             book = Book.query.filter(Book.isbn == isbn).first()
-            average_score = book.average_score
+            average_score = round(book.average_score, 2)
             review_count = book.review_count
             reviews = Review.query.filter(Review.isbn == isbn) 
             reviews=reviews[::-1]        
