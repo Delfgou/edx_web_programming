@@ -126,7 +126,7 @@ def search():
 
 @app.route("/<string:isbn>/<string:title>/<string:author>/<string:year>", methods =["post"])
 def details(isbn,title,author,year):
-    key = "IhQrUp1cuWV8mu4SOw7QTQ"
+    key = "QNHc53QXwWWa16lXg2K3Dw"
     res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": key, "isbns": isbn})
     numb = res.json()['books'][0]['ratings_count']
     avg = res.json()['books'][0]['average_rating']
@@ -152,8 +152,8 @@ def rating(isbn,title,author,year,avg,numb,reviews):
             return render_template('error.html', message = "Rating must be a number!")
     else:
         return 'You have rated this book already'
-    
-<<<<<<< HEAD
+
+
 @app.route('/api/<isbn>', methods = ['get'])
 def api(isbn):
     db_full = Book.query.filter(Book.isbn==isbn).first()
@@ -168,8 +168,6 @@ def api(isbn):
     json_data = json.dumps(api_json)
     return json_data
 
-=======
->>>>>>> recalculate_rating
 if __name__ == "__main__":
     with app.app_context():
         main()     

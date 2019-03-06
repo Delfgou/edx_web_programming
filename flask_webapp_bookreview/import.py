@@ -3,7 +3,7 @@ from flask import Flask, render_template, request
 from models import *
 import csv
 import requests
-import json
+#import json
 
 
 from sqlalchemy import create_engine
@@ -34,16 +34,23 @@ reader = csv.reader(b)
 #key = "IhQrUp1cuWV8mu4SOw7QTQ"
 key = "QNHc53QXwWWa16lXg2K3Dw" #new
 for isbn, title, author, year in reader: # loop gives each column a name
-    print(1)
-    res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": key, "isbns": isbn})
-    print(2)
-    #todos = json.loads(response.text)
-    #res = json.loads(res.decode("utf-8"))
-    #res = json.loads(str(res))
-    avg = res.json()['books'][0]['average_rating']  
-    print(3)
-    numb = res.json()['books'][0]['work_ratings_count']
-    db.execute("INSERT INTO books (isbn, title, author, year, average_rating, number_of_ratings) VALUES (:isbn, :title, :author, :year, :average_rating, :number_of_ratings)",{"isbn": isbn, "title": title, "author": author, "year": year, "average_rating": avg, "number_of_ratings": numb}) # substitute values from CSV line into SQL command, as per this dict
+    try:
+        print(isbn)
+        print(title)
+        res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": key, "isbns": isbn})
+        print(res.json())
+        #todos = json.loads(response.text)
+        #res = json.loads(res.decode("utf-8"))
+        #res = json.loads(str(res))
+        #avg = None
+        #numb = None
+        
+        avg = res.json()['books'][0]['average_rating']  
+        print(avg)
+        #numb = res.json()['books'][0]['work_ratings_count']
+        #db.execute("INSERT INTO books (isbn, title, author, year, average_rating, number_of_ratings) VALUES (:isbn, :title, :author, :year, :average_rating, :number_of_ratings)",{"isbn": isbn, "title": title, "author": author, "year": year, "average_rating": avg, "number_of_ratings": numb}) # substitute values from CSV line into SQL command, as per this dict
+    except:
+        pass
 db.commit() # transactions are assumed, so close the transaction finished
 
 
