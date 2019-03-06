@@ -38,6 +38,8 @@ for isbn, title, author, year in reader:
     count += 1
     print(count)
     try:
+        if len(isbn) < 10:
+            isbn = f'0{isbn}'
         print(isbn)
         print(title)
         res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": key, "isbns": isbn})
