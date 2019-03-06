@@ -116,12 +116,7 @@ def search():
     isbn = escape(request.form.get("isbn"))
     title = escape(request.form.get("title"))
     author = escape(request.form.get("author"))
-    year = escape(request.form.get("year"))    
-    results_isbn = Book.query.filter(Book.isbn.ilike(f"%{isbn}%")).all()
-    results_title = Book.query.filter(Book.title.ilike(f"%{title}%")).all()
-    results_author = Book.query.filter(Book.author.ilike(f"%{author}%")).all()
-    results_year = Book.query.filter(Book.year.ilike(f"%{year}%")).all()
-    results = Book.query.filter(Book.isbn.ilike(f"%{isbn}%"),Book.title.ilike(f"%{title}%"),Book.author.ilike(f"%{author}%"),Book.year.ilike(f"%{year}%")).all()
+    results = Book.query.filter(Book.isbn.ilike(f"%{isbn}%"),Book.title.ilike(f"%{title}%"),Book.author.ilike(f"%{author}%")).all()
     if results== []:
         return render_template('error.html', message = "No results")
     return render_template('search_results.html', results = results)    
@@ -147,7 +142,9 @@ def rating(isbn,title,author,year,average_score,review_count,reviews):
     if reviewed_before is None:
         try: 
             review = Review(isbn = isbn, rating = rating, comment = comment, username=session['username'])
-            
+            book = Book.query.filter(Book.isbn == isbn).first()
+            book.average_score = ((book.average_score * book.review_count) + rating) / (book.review_count + 1)
+            book.review_count += 1            
             db.session.add(review)
             db.session.commit()  
             reviews = Review.query.filter(Review.isbn == isbn) 
