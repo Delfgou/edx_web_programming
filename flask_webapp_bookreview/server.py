@@ -166,10 +166,9 @@ def api(isbn):
     author = db_full.author
     year = db_full.year
     isbn = db_full.isbn
-    #"review_count": 28,
-    #"average_score": 5.0    
-    
-    api_json = data = {"title": title, "author": author, "year": year,"isbn": isbn}
+    review_count = db_full.review_count
+    average_score = db_full.average_score
+    api_json = data = {"title": title, "author": author, "year": year,"isbn": isbn, "review_count": review_count, "average_score": average_score}
     json_data = json.dumps(api_json)
     return json_data
 
