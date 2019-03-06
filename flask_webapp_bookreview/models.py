@@ -18,7 +18,7 @@ class Book(db.Model):
     isbn = db.Column(db.String)
     title = db.Column(db.String)
     author = db.Column(db.String)
-    year = db.Column(db.String)
+    year = db.Column(db.Integer)
     average_score = db.Column(db.Float)
     review_count = db.Column(db.Integer)
 
