@@ -128,14 +128,14 @@ def search():
 def details(isbn,title,author,year):
     key = "QNHc53QXwWWa16lXg2K3Dw"
     res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": key, "isbns": isbn})
-    numb = res.json()['books'][0]['ratings_count']
-    avg = res.json()['books'][0]['average_rating']
+    review_count = res.json()['books'][0]['ratings_count']
+    average_score = res.json()['books'][0]['average_rating']
     reviews = Review.query.filter(Review.isbn == isbn)
     reviews=reviews[::-1]
-    return render_template('page_book.html', isbn=isbn, title=title, author=author,year=year,avg=avg, numb=numb, reviews=reviews)
+    return render_template('page_book.html', isbn=isbn, title=title, author=author,year=year,average_score=average_score, review_count=review_count, reviews=reviews)
 
-@app.route("/rating/<string:isbn>/<string:title>/<string:author>/<string:year>/<string:avg>/<string:numb>/<string:reviews>", methods =["post"])
-def rating(isbn,title,author,year,avg,numb,reviews):
+@app.route("/rating/<string:isbn>/<string:title>/<string:author>/<string:year>/<string:average_score>/<string:review_count>/<string:reviews>", methods =["post"])
+def rating(isbn,title,author,year,average_score,review_count,reviews):
     rating = escape(request.form.get("rating")) 
     comment = escape(request.form.get("comment"))
     reviewed_before = Review.query.filter(Review.isbn == isbn, Review.username == session['username']).first()
@@ -147,7 +147,7 @@ def rating(isbn,title,author,year,avg,numb,reviews):
             db.session.commit()  
             reviews = Review.query.filter(Review.isbn == isbn) 
             reviews=reviews[::-1]        
-            return render_template('page_book.html', isbn=isbn, title=title, author=author,year=year,avg=avg, numb=numb, reviews=reviews)        
+            return render_template('page_book.html', isbn=isbn, title=title, author=author,year=year,average_score=average_score, review_count=review_count, reviews=reviews)        
         except:
             return render_template('error.html', message = "Rating must be a number!")
     else:
