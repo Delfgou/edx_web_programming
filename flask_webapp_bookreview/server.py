@@ -43,8 +43,10 @@ def register():
         link = url_for('confirm_email', token = token, _external=True, username=username)
         msg.body =  'Your link is {}'.format(link)
         mail.send(msg)        
-        session['username'] = escape(request.form['username'])     
-    return '<h3> Email or username is already taken.</h3>'
+        session['username'] = escape(request.form['username'])  
+        return '<h3>An email with a confirmation link has been sent to your email address</h3>'
+    else:
+        return '<h3> Email or username is already taken.</h3>'
 
 @app.route('/confirm_email/<token>/<username>')
 def confirm_email(token,username):

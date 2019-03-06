@@ -19,7 +19,7 @@ class Book(db.Model):
     title = db.Column(db.String)
     author = db.Column(db.String)
     year = db.Column(db.String)
-    average_score = db.Column(db.Integer)
+    average_score = db.Column(db.Float)
     review_count = db.Column(db.Integer)
 
 class Review(db.Model):
