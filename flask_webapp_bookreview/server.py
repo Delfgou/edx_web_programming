@@ -123,10 +123,6 @@ def search():
 
 @app.route("/<string:isbn>/<string:title>/<string:author>/<string:year>", methods =["post"])
 def details(isbn,title,author,year):
-    #key = "QNHc53QXwWWa16lXg2K3Dw"
-    #res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": key, "isbns": isbn})
-    #review_count = res.json()['books'][0]['ratings_count']
-    #average_score = res.json()['books'][0]['average_rating']
     detailed_book = Book.query.filter(Book.isbn == isbn).first()
     average_score = detailed_book.average_score
     review_count = detailed_book.review_count
