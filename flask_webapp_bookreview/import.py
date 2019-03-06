@@ -36,7 +36,6 @@ key = "QNHc53QXwWWa16lXg2K3Dw" #new
 
 for isbn, title, author, year in reader: # loop gives each column a name
     try:
-        count += 1
         print(isbn)
         print(title)
         res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": key, "isbns": isbn})
@@ -49,9 +48,10 @@ for isbn, title, author, year in reader: # loop gives each column a name
         
         avg = res.json()['books'][0]['average_rating']  
         print(avg)
-        #numb = res.json()['books'][0]['work_ratings_count']
-        #db.execute("INSERT INTO books (isbn, title, author, year, average_rating, number_of_ratings) VALUES (:isbn, :title, :author, :year, :average_rating, :number_of_ratings)",{"isbn": isbn, "title": title, "author": author, "year": year, "average_rating": avg, "number_of_ratings": numb}) # substitute values from CSV line into SQL command, as per this dict        
-        #db.commit() # transactions are assumed, so close the transaction finished
+        numb = res.json()['books'][0]['work_ratings_count']
+        print(numb)
+        db.execute("INSERT INTO books (isbn, title, author, year, average_rating, number_of_ratings) VALUES (:isbn, :title, :author, :year, :average_rating, :number_of_ratings)",{"isbn": isbn, "title": title, "author": author, "year": year, "average_rating": avg, "number_of_ratings": numb}) # substitute values from CSV line into SQL command, as per this dict        
+        db.commit() # transactions are assumed, so close the transaction finished
     
     except:
         pass
