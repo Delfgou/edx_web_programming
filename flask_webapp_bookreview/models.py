@@ -10,7 +10,6 @@ class User(db.Model): #or db.database_name ?
     salt = db.Column(db.String, nullable = False)
     password = db.Column(db.String, nullable = False)
     confirmed = db.Column(db.Boolean, nullable=False, default=False)
-    confirmed_on = db.Column(db.DateTime, nullable=True)
     
 class Book(db.Model):
     __tablename__="books"

@@ -1,4 +1,11 @@
-Flask
-Flask-Session
-psycopg2
-SQLAlchemy
+import os
+from flask import Flask, render_template, request, session, url_for, escape, redirect, abort
+from werkzeug.security import generate_password_hash, check_password_hash, gen_salt
+from sqlalchemy import or_
+from flask_session import Session
+from flask_mail import Mail,Message
+from itsdangerous import URLSafeTimedSerializer, SignatureExpired
+import requests
+from string import ascii_letters
+from random import choice
+import json

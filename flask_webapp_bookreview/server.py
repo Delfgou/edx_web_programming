@@ -61,7 +61,7 @@ def confirm_email(token,username):
 
 @app.route("/")
 def index():
-    return render_template('index.html', message="Welcome!")
+    return render_template('index.html', message="Welcome to books3000!")
 
 @app.route("/go_register", methods=["POST"])
 def go_to_register():
@@ -124,7 +124,7 @@ def search():
 @app.route("/<string:isbn>/<string:title>/<string:author>/<string:year>", methods =["post"])
 def details(isbn,title,author,year):
     detailed_book = Book.query.filter(Book.isbn == isbn).first()
-    average_score = detailed_book.average_score
+    average_score = round(detailed_book.average_score, 2)
     review_count = detailed_book.review_count
     reviews = Review.query.filter(Review.isbn == isbn)
     reviews=reviews[::-1]

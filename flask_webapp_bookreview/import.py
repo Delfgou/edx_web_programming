@@ -19,6 +19,7 @@ if __name__ == "__main__":
     with app.app_context():
         main()  
         
+        
 engine = create_engine(("postgres://vhltvfuekxyisp:4e8e3284506f4903c26843cbeca2e8bc2ed4693c95ddd2dd8f104550c5700e27@ec2-79-125-6-250.eu-west-1.compute.amazonaws.com:5432/d4j9oravts15j7")) # database engine object from SQLAlchemy that manages connections to the database" # DATABASE_URL is an environment variable that indicates where the database lives
 db = scoped_session(sessionmaker(bind=engine))        
 b = open("books.csv")
