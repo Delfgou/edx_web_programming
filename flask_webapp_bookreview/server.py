@@ -134,10 +134,14 @@ def details(isbn,title,author,year):
 def rating(isbn,title,author,year,average_score,review_count,reviews):
     rating = int(escape(request.form.get("rating")))
     comment = escape(request.form.get("comment"))
-    reviewed_before = Review.query.filter(Review.isbn == isbn, Review.username == session['username']).first()
+    user = User.query.filter(User.username == session['username']).first()
+    userid = user.id
+    reviewed_before = Review.query.filter(Review.isbn == isbn, Review.userid == userid).first()
     if reviewed_before is None:
         try: 
-            review = Review(isbn = isbn, rating = rating, comment = comment, username=session['username'])
+            #User = User(username=session['username'].first())
+            #UserID = User.id
+            review = Review(isbn = isbn, rating = rating, comment = comment, userid = userid)
             book = Book.query.filter(Book.isbn == isbn).first()
             score_before = book.average_score
             count_before = book.review_count
